@@ -1,4 +1,4 @@
-name: PyLint
+name: PyLint Run
 
 on:
   workflow_call:
@@ -18,7 +18,7 @@ on:
         default: tests
 
 jobs:
-  py_lint:
+  pylint:
     runs-on: ubuntu-latest
 
     steps:
@@ -34,6 +34,12 @@ jobs:
 
     - name: Install Pylint
       run: pip install pylint
+    
+    - name: list files
+      run: |
+        pwd
+        ls -latr
+      shell: bash
 
     - name: Run Pylint
-      run: pylint --rcfile=${{ input.rc_file}} ${{ input.app_src_dir}} ${{ input.app_test_dir}}
+      run: pylint --rcfile=${{ inputs.rc_file}} ${{ inputs.app_src_dir}} ${{ inputs.app_test_dir}}

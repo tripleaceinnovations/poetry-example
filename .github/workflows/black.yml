@@ -1,14 +1,18 @@
-name: YamlLint Run
+name: Black Run
 
 on:
   workflow_call:
+    inputs:
+      app_src_dir:
+        required: true
+        type: string
 
 jobs:
-  yamllint:
+  black:
     runs-on: ubuntu-latest
 
     steps:
-    - name: checkout
+    - name: Checkout
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
@@ -18,8 +22,8 @@ jobs:
       with:
         python-version: 3.9
 
-    - name: Install Yamllint
-      run: pip install yamllint
+    - name: Install Black
+      run: pip install black
     
     - name: list files
       run: |
@@ -27,5 +31,5 @@ jobs:
         ls -latr
       shell: bash
 
-    - name: Run YamlLint
-      run: yamllint -d relaxed .
+    - name: Run black
+      run: black --check ${{ inputs.app_src_dir}}

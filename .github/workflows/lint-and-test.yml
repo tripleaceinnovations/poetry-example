@@ -1,13 +1,25 @@
-name: Python package
+name: PyLint and YamlLint
 
-on: [push]
+on:
+  push:
+    branches:
+      - dev1
+  workflow_dispatch:
 
 jobs:
-  build:
+  pylint_and_yamllint:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout 
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
 
-    - name: Build
-      run: docker build --tag poetry-project --file docker/Dockerfile .
+    - name: pylint
+      uses: ./.github/workflows/pylint.yml
+      with:
+        app_src_dir: app
+
+    - name: yamllint
+      uses: ./.github/workflows/yamllint.yml

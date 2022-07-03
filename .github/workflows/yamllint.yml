@@ -1,13 +1,25 @@
-name: Python package
+name: YamlLint
 
-on: [push]
+on:
+  workflow_call:
 
 jobs:
-  build:
+  yaml_lint:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - name: checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    
+    - name: Setup Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
 
-    - name: Build
-      run: docker build --tag poetry-project --file docker/Dockerfile .
+    - name: Install Yamllint
+      run: pip install yamllint
+
+    - name: Run YamlLint
+      run: yamllint -d relaxed .

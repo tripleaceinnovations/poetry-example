@@ -20,3 +20,5 @@ jobs:
   black:
     name: yamllint
     uses: ./.github/workflows/black.yml
+    with:
+        app_src_dir: app

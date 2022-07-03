@@ -17,7 +17,9 @@ jobs:
         fetch-depth: 0
     
     - name: list checkout files
-      run: ls -latr
+      run: |
+        pwd
+        ls -latr
       shell: bash
 
     - name: pylint

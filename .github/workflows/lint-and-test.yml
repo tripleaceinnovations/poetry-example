@@ -1,6 +1,9 @@
-name: PyLint and YamlLint
+name: Linting
 
 on:
+  pull_request:
+    branches:
+      - "**"
   push:
     branches:
       - main
@@ -20,5 +23,11 @@ jobs:
   black:
     name: black
     uses: ./.github/workflows/black.yml
+    with:
+        app_src_dir: app
+  
+  coverage:
+    name: coverage
+    uses: ./.github/workflows/coverage.yml
     with:
         app_src_dir: app

@@ -1,0 +1,78 @@
+name: Coverage Run
+
+on:
+  workflow_call:
+    inputs:
+      app_src_dir:
+        description: >
+          The application source directory.
+        required: true
+        type: string
+      
+      max_failure:
+        description: >
+          Stop pytest after this many failures.
+          (default: 2)
+        required: false
+        type: string
+        default: 2
+      
+      fail_under_percentage:
+        description: >
+          Minumum test coverage allowed.
+            (default: 70)
+        required: false
+        type: string
+        default: 70
+      
+      app_test_dir:
+        description: >
+          The application test directory.
+            (default: tests)
+        required: false
+        type: string
+        default: tests
+      
+      test_runner:
+        description: >
+          The test runner to use for coverage.
+            (default: pytest)
+        required: false
+        type: string
+        default: pytest
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    
+    - name: Setup Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+
+    # - name: Install Pytest
+    #   run: pip install pytest
+
+    - name: Install ${{ inputs.test_runner}}
+      run: pip install ${{ inputs.test_runner}}
+    
+    - name: Install Coverage
+      run: pip install coverage
+    
+    - name: list files
+      run: |
+        pwd
+        ls -latr
+      shell: bash
+
+    - name: Run coverage with ${{ inputs.test_runner}}
+      run: |
+        coverage run --source ${{ inputs.app_src_dir}} -m ${{ inputs.test_runner}} --maxfail=${{ inputs.max_failure}} ${{ inputs.app_test_dir}}
+        coverage report -m --fail-under==${{ inputs.fail_under_percentage}} --skip-covered
+    

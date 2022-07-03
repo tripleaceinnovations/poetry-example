@@ -4,15 +4,23 @@ on:
   workflow_call:
     inputs:
       app_src_dir:
+        description: >
+          The application source directory.
         required: true
         type: string
       
       rc_file:
+        description: >
+          The link to configuration file.
+            (default: pylintrc)
         required: false
         type: string
         default: pylintrc
       
       app_test_dir:
+        description: >
+          The application test directory.
+            (default: tests)
         required: false
         type: string
         default: tests

@@ -4,6 +4,8 @@ on:
   workflow_call:
     inputs:
       app_src_dir:
+        description: >
+          The application source directory.
         required: true
         type: string
 

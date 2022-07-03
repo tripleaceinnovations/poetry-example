@@ -3,30 +3,16 @@ name: PyLint and YamlLint
 on:
   push:
     branches:
-      - dev1
+      - main
   workflow_dispatch:
 
 jobs:
-  pylint_and_yamllint:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout 
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-    
-    - name: list checkout files
-      run: |
-        pwd
-        ls -latr
-        ls -latr ./.github/workflows
-      shell: bash
-
-    - name: pylint
-      uses: ./.github/workflows/pylint.yaml
-      with:
+  pylint:
+    name: pylint
+    uses: ./.github/workflows/pylint.yml
+    with:
         app_src_dir: app
 
-    - name: yamllint
-      uses: ./.github/workflows/yamllint.yaml
+  yamllint:
+    name: yamllint
+    uses: ./.github/workflows/yamllint.yml

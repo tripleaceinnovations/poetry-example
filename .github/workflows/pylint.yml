@@ -41,5 +41,8 @@ jobs:
         ls -latr
       shell: bash
 
-    - name: Run Pylint
-      run: pylint --rcfile=${{ inputs.rc_file}} ${{ inputs.app_src_dir}} ${{ inputs.app_test_dir}}
+    # - name: Run Pylint
+    #   run: pylint --rcfile=${{ inputs.rc_file}} ${{ inputs.app_src_dir}} ${{ inputs.app_test_dir}}
+    
+    - name: Run black
+      run: black --check ${{ inputs.app_src_dir}}

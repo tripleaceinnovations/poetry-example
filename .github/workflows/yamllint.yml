@@ -20,6 +20,12 @@ jobs:
 
     - name: Install Yamllint
       run: pip install yamllint
+    
+    - name: list files
+      run: |
+        pwd
+        ls -latr
+      shell: bash
 
     - name: Run YamlLint
       run: yamllint -d relaxed .

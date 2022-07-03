@@ -1,4 +1,4 @@
-name: PyLint
+name: PyLint Run
 
 on:
   workflow_call:
@@ -18,7 +18,7 @@ on:
         default: tests
 
 jobs:
-  py_lint:
+  pylint:
     runs-on: ubuntu-latest
 
     steps:

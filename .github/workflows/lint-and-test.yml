@@ -23,9 +23,9 @@ jobs:
       shell: bash
 
     - name: pylint
-      uses: ./.github/workflows/pylint.yml
+      uses: ./.github/workflows/pylint.yaml
       with:
         app_src_dir: app
 
     - name: yamllint
-      uses: ./.github/workflows/yamllint.yml
+      uses: ./.github/workflows/yamllint.yaml

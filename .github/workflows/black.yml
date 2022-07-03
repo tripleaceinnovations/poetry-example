@@ -1,4 +1,4 @@
-name: PyLint Run
+name: Black Run
 
 on:
   workflow_call:
@@ -6,23 +6,13 @@ on:
       app_src_dir:
         required: true
         type: string
-      
-      rc_file:
-        required: false
-        type: string
-        default: pylintrc
-      
-      app_test_dir:
-        required: false
-        type: string
-        default: tests
 
 jobs:
   pylint:
     runs-on: ubuntu-latest
 
     steps:
-    - name: checkout
+    - name: Checkout
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
@@ -32,8 +22,8 @@ jobs:
       with:
         python-version: 3.9
 
-    - name: Install Pylint
-      run: pip install pylint
+    - name: Install Black
+      run: pip install black
     
     - name: list files
       run: |
@@ -41,5 +31,5 @@ jobs:
         ls -latr
       shell: bash
 
-    - name: Run Pylint
-      run: pylint --rcfile=${{ inputs.rc_file}} ${{ inputs.app_src_dir}} ${{ inputs.app_test_dir}}
+    - name: Run black
+      run: black --check ${{ inputs.app_src_dir}}

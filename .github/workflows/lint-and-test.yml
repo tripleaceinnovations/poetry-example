@@ -16,3 +16,7 @@ jobs:
   yamllint:
     name: yamllint
     uses: ./.github/workflows/yamllint.yml
+  
+  black:
+    name: yamllint
+    uses: ./.github/workflows/black.yml

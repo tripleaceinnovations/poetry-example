@@ -20,6 +20,7 @@ jobs:
       run: |
         pwd
         ls -latr
+        ls -latr ./.github/workflows
       shell: bash
 
     - name: pylint

@@ -1,0 +1,68 @@
+name: Black Run
+
+on:
+  workflow_call:
+    # inputs:
+    #   app_src_dir:
+    #     description: >
+    #       The application source directory.
+    #     required: true
+    #     type: string
+
+jobs:
+  pre_commit_run:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    
+    - name: Setup Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+
+    - name: Install precommit
+      run: pip install pre-commit
+    
+    - name: list files
+      run: |
+        pwd
+        ls -latr
+        cat ./.pre-commit-config.yaml
+      shell: bash
+
+    # - name: Run pre-commit-autoupdate
+    #   id: precommit-autoupdate
+    #   run: |
+    #     pre-commit autoupdate
+    #     if [ -n "$(git status --porcelain)" ]; then
+    #       echo "::set-output name=updated::true"
+    #     else
+    #       echo "::set-output name=updated::false"
+    #     fi
+
+    # - name: Commit new changes
+    #   if: steps.precommit-autoupdate.updated == 'true'
+    #   run: |
+    #     git config --global user.name "GHA"
+    #     git config --global user.email "dexy004@gmail.com"
+    #     git commit -am "pre-commit autoupdate at $(date --utc +'%Y-%m-%d %H:%MZ')"
+    #     git log -1
+
+    - name: Run pre-commit
+      # if: steps.precommit-autoupdate.updated == 'true'
+      run: pre-commit run --all-files --show-diff-on-failure
+
+    # - name: Create PR
+    #   if: sucess()
+    #   uses: peter-evans/create-pull-request@v4
+    #   with:
+    #     commit-message: bump version
+    #     title: "chore: pre-commit autoupdate"
+    #     body: Automated pull request for pre-commit autoupdate
+    #     branch: bump-version
+    #     base: dev
+    #     token: ${{ secrets.GITHUB_TOKEN }}

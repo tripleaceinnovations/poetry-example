@@ -10,24 +10,28 @@ on:
   workflow_dispatch:
 
 jobs:
-  pylint:
-    name: pylint
-    uses: ./.github/workflows/pylint.yml
-    with:
-        app_src_dir: app
+  # pylint:
+  #   name: pylint
+  #   uses: ./.github/workflows/pylint.yml
+  #   with:
+  #       app_src_dir: app
 
-  yamllint:
-    name: yamllint
-    uses: ./.github/workflows/yamllint.yml
+  # yamllint:
+  #   name: yamllint
+  #   uses: ./.github/workflows/yamllint.yml
   
-  black:
-    name: black
-    uses: ./.github/workflows/black.yml
-    with:
-        app_src_dir: app
+  # black:
+  #   name: black
+  #   uses: ./.github/workflows/black.yml
+  #   with:
+  #       app_src_dir: app
   
-  coverage:
-    name: coverage
-    uses: ./.github/workflows/coverage.yml
-    with:
-        app_src_dir: app
+  # coverage:
+  #   name: coverage
+  #   uses: ./.github/workflows/coverage.yml
+  #   with:
+  #       app_src_dir: app
+  
+  pre-commit:
+    name: pre-commit
+    uses: ./.github/workflows/precommit.yml

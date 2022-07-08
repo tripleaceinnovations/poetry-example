@@ -1,13 +1,55 @@
-name: Black Run
+name: pre-commit-run
 
 on:
   workflow_call:
-    # inputs:
-    #   app_src_dir:
-    #     description: >
-    #       The application source directory.
-    #     required: true
-    #     type: string
+    inputs:
+      # Approach 1
+      hook_stage:
+        description: >
+          The pre-commit hook stage to run.
+            (default: all)
+        required: false
+        type: string
+        default: all
+
+      # Approach 2
+      run_all_hooks:
+        description: >
+          Flag name running pre-commit.
+          (default: no)
+        required: false
+        type: string
+        default: no
+
+      run_pylint_hook:
+        description: >
+          Flag name running pre-commit.
+          (default: false)
+        required: false
+        type: boolean
+        default: false
+      
+      run_black_hook:
+        description: >
+          Flag name running pre-commit.
+          (default: false)
+        required: false
+        type: boolean
+        default: false
+      
+      run_yamllint_hook:
+        description: >
+          Flag name running pre-commit.
+          (default: false)
+        required: false
+        type: boolean
+        default: true
+      
+      app_src_dir:
+        description: >
+          The application source directory.
+        required: false
+        type: string
 
 jobs:
   pre_commit_run:
@@ -18,7 +60,7 @@ jobs:
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
-    
+
     - name: Setup Python 3.9
       uses: actions/setup-python@v2
       with:
@@ -26,7 +68,7 @@ jobs:
 
     - name: Install precommit
       run: pip install pre-commit
-    
+
     - name: list files
       run: |
         pwd
@@ -34,35 +76,56 @@ jobs:
         cat ./.pre-commit-config.yaml
       shell: bash
 
-    # - name: Run pre-commit-autoupdate
-    #   id: precommit-autoupdate
-    #   run: |
-    #     pre-commit autoupdate
-    #     if [ -n "$(git status --porcelain)" ]; then
-    #       echo "::set-output name=updated::true"
-    #     else
-    #       echo "::set-output name=updated::false"
-    #     fi
-
-    # - name: Commit new changes
-    #   if: steps.precommit-autoupdate.updated == 'true'
-    #   run: |
-    #     git config --global user.name "GHA"
-    #     git config --global user.email "dexy004@gmail.com"
-    #     git commit -am "pre-commit autoupdate at $(date --utc +'%Y-%m-%d %H:%MZ')"
-    #     git log -1
-
-    - name: Run pre-commit
-      # if: steps.precommit-autoupdate.updated == 'true'
+    - name: Run pre-commit on all files
+      if: ${{ inputs.hook_stage == 'all' }}
       run: pre-commit run --all-files --show-diff-on-failure
 
-    # - name: Create PR
-    #   if: sucess()
-    #   uses: peter-evans/create-pull-request@v4
-    #   with:
-    #     commit-message: bump version
-    #     title: "chore: pre-commit autoupdate"
-    #     body: Automated pull request for pre-commit autoupdate
-    #     branch: bump-version
-    #     base: dev
-    #     token: ${{ secrets.GITHUB_TOKEN }}
+    # Approach 1
+    - name: Run pre-commit hook stage
+      if: ${{ inputs.hook_stage != 'all' }}
+      run: pre-commit run --hook-stage  ${{ inputs.hook_stage }} --all-files --show-diff-on-failure
+      # run: pre-commit install # just testing
+      # run: pre-commit run --hook-stage  ${{ inputs.hook_stage }} --show-diff-on-failure # skipped files
+    
+    - name: Run pre-commit hook stage
+      if: ${{ inputs.hook_stage != 'all' }}
+      run: pre-commit run --hook-stage  ${{ inputs.hook_stage }} --all-files --show-diff-on-failure
+    
+    # Approach 2
+    # - name: Run pre-commit with pylint hook
+    #   if: ${{ inputs.run_pylint_hook && always() }}
+    #   run: pre-commit run pylint --files  ${{ inputs.app_src_dir }}/* --show-diff-on-failure
+    
+    # - name: Run pre-commit with black hook
+    #   if: ${{ inputs.run_black_hook && always() }}
+    #   # if: ${{ inputs.run_black_hook == 'yes' && always() }}   # worked
+    #   run: pre-commit run black --files  ${{ inputs.app_src_dir }}/* --show-diff-on-failure
+
+    # - name: Run pre-commit with yamllint hook
+    #   if: ${{ inputs.run_yamllint_hook && always() }}
+    #   run: pre-commit run yamllint --show-diff-on-failure
+
+    # Approach 3
+    # - name: Run pre-commit with yamllint hook
+    #   if: always() && ${{ inputs.run_yamllint_hook }}
+    #   run: |
+    #     for f in $FILES; 
+    #     do 
+    #       if $FILES = ""yamllint"; then
+    #         pre-commit run $FILES --show-diff-on-failure; 
+    #       else
+    #         pre-commit run $FILES --files  ${{ inputs.app_src_dir }}/* --show-diff-on-failure; 
+    #       fi
+        
+    #     done
+    #   shell: bash
+      
+    # for checks
+    # - name: Run pre-commit linters
+    #   run: pre-commit run black --files tests/* --show-diff-on-failure # works well
+      # run: pre-commit run black --files app/main.py --show-diff-on-failure # works if you specify a filename
+      # run: pre-commit run black --files app --show-diff-on-failure # no files to check, skipped stuff
+      # run: pre-commit run black --files app --all-files --show-diff-on-failure # cannot use --files and --all-files 2geda 
+      # run: pre-commit run pylint, black, yamllint --all-files --show-diff-on-failure # syntax not working
+      # run: pre-commit run --files app/ --show-diff-on-failure --hook-stage manual black #still skips the file
+      # run: pre-commit run trailing-whitespace, prettier --show-diff-on-failure # syntax not working

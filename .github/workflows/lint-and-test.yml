@@ -19,19 +19,35 @@ jobs:
   # yamllint:
   #   name: yamllint
   #   uses: ./.github/workflows/yamllint.yml
-  
+
   # black:
   #   name: black
   #   uses: ./.github/workflows/black.yml
   #   with:
   #       app_src_dir: app
-  
+
   # coverage:
   #   name: coverage
   #   uses: ./.github/workflows/coverage.yml
   #   with:
   #       app_src_dir: app
-  
+
   pre-commit:
     name: pre-commit
     uses: ./.github/workflows/precommit.yml
+    with:
+      # hook_stage: commit # Approach 1
+      hook_stage: manual # Approach 1
+      # Approach 2
+      # app_src_dir: tests
+      # run_pylint_hook: true
+      # run_black_hook: true
+      # run_yamllint_hook: true
+  
+  # pre-commit-autoupdate:
+  #   name: pre-commit
+  #   uses: ./.github/workflows/precommit-autoupdate.yml
+
+  # tox:
+  #   name: tox-run
+  #   uses: ./.github/workflows/tox39.yml

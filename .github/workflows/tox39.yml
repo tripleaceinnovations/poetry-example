@@ -1,14 +1,14 @@
-name: YamlLint Run
+name: pre-commit-run
 
 on:
   workflow_call:
-
+    
 jobs:
-  yamllint:
+  tox_run:
     runs-on: ubuntu-latest
 
     steps:
-    - name: checkout
+    - name: Checkout
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
@@ -16,16 +16,17 @@ jobs:
     - name: Setup Python 3.9
       uses: actions/setup-python@v2
       with:
-        python-version: 3.9
+        python-version: 3.8
 
-    - name: Install Yamllint
-      run: pip install yamllint
+    - name: Install tox
+      run: pip install tox
 
     - name: list files
       run: |
         pwd
         ls -latr
+ 
       shell: bash
 
-    - name: Run YamlLint
-      run: yamllint -d relaxed .
+    - name: Run tox39
+      run: tox -e py39

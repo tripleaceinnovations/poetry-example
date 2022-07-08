@@ -8,7 +8,7 @@ on:
           The application source directory.
         required: true
         type: string
-      
+
       max_failure:
         description: >
           Stop pytest after this many failures.
@@ -16,7 +16,7 @@ on:
         required: false
         type: string
         default: 2
-      
+
       fail_under_percentage:
         description: >
           Minumum test coverage allowed.
@@ -24,7 +24,7 @@ on:
         required: false
         type: string
         default: 70
-      
+
       app_test_dir:
         description: >
           The application test directory.
@@ -32,7 +32,7 @@ on:
         required: false
         type: string
         default: tests
-      
+
       test_runner:
         description: >
           The test runner to use for coverage.
@@ -50,7 +50,7 @@ jobs:
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
-    
+
     - name: Setup Python 3.9
       uses: actions/setup-python@v2
       with:
@@ -61,10 +61,10 @@ jobs:
 
     - name: Install ${{ inputs.test_runner}}
       run: pip install ${{ inputs.test_runner}}
-    
+
     - name: Install Coverage
       run: pip install coverage
-    
+
     - name: list files
       run: |
         pwd
@@ -75,4 +75,3 @@ jobs:
       run: |
         coverage run --source ${{ inputs.app_src_dir}} -m ${{ inputs.test_runner}} --maxfail=${{ inputs.max_failure}} ${{ inputs.app_test_dir}}
         coverage report -m --fail-under==${{ inputs.fail_under_percentage}} --skip-covered
-    

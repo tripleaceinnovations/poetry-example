@@ -1,0 +1,15 @@
+name: Test Workflow
+
+on:
+  workflow_run:
+    workflows:
+      - Linting
+    types:
+      - completed
+
+jobs:
+  black:
+    name: black
+    uses: ./.github/workflows/black.yml
+    with:
+        app_src_dir: app

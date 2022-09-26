@@ -21,7 +21,7 @@ jobs:
   #   uses: ./.github/workflows/yamllint.yml
 
   test-black:
-    # name: black
+    # name: test-black
     uses: ./.github/workflows/black.yml
     with:
         app_src_dir: app
@@ -48,6 +48,6 @@ jobs:
   #   name: pre-commit
   #   uses: ./.github/workflows/precommit-autoupdate.yml
 
-  # tox:
+  # tox-run:
   #   name: tox-run
   #   uses: ./.github/workflows/tox39.yml

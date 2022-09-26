@@ -7,9 +7,35 @@ on:
     types:
       - completed
 
+# jobs:
+#   test-workflow-black:
+#     name: workflow-black
+#     uses: ./.github/workflows/black.yml
+#     with:
+#         app_src_dir: app
 jobs:
   test-workflow-black:
-    name: workflow-black
-    uses: ./.github/workflows/black.yml
-    with:
-        app_src_dir: app
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Setup Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+
+    - name: Install Black
+      run: pip install black
+
+    - name: list files
+      run: |
+        pwd
+        ls -latr
+      shell: bash
+
+    - name: Run black
+      run: black --check app

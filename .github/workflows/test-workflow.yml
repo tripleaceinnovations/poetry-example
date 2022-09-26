@@ -8,8 +8,8 @@ on:
       - completed
 
 jobs:
-  black:
-    name: black
+  test-workflow-black:
+    name: workflow-black
     uses: ./.github/workflows/black.yml
     with:
         app_src_dir: app

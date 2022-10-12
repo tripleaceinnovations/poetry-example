@@ -40,8 +40,8 @@ jobs:
     - name: Run black
       run: black --check app
 
-    # if you are NOT using Cypress GitHub Integration App, then set commit status manually
-      # https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#job-status-check-functions
+    # xxxxyyyy if you are NOT using Cypress GitHub Integration App, then set commit status manually
+    # https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#job-status-check-functions
     - name: test-workflow-black check ✅
       if: ${{ success() }}
         # set the merge commit status check
@@ -53,7 +53,7 @@ jobs:
         --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
         --header 'content-type: application/json' \
         --data '{
-          "context": "Run unit tests",
+          "context": "test-workflow-black",
           "state": "success",
           "description": "Run unit tests passed",
           "target_url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
@@ -66,7 +66,7 @@ jobs:
         --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
         --header 'content-type: application/json' \
         --data '{
-          "context": "Run unit tests",
+          "context": "test-workflow-black",
           "state": "failure",
           "description": "Run unit tests failed",
           "target_url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"

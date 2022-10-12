@@ -5,7 +5,7 @@ on:
     workflows:
       - Linting
     types:
-      - completed
+      -  completed
 
 # jobs:
 #   test-workflow-black:
@@ -39,3 +39,35 @@ jobs:
 
     - name: Run black
       run: black --check app
+
+    # if you are NOT using Cypress GitHub Integration App, then set commit status manually
+      # https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#job-status-check-functions
+    - name: test-workflow-black check ✅
+      if: ${{ success() }}
+        # set the merge commit status check
+        # using GitHub REST API
+        # see https://docs.github.com/en/rest/reference/repos#create-a-commit-status
+      run: |
+        curl --request POST \
+        --url https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.sha }} \
+        --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+        --header 'content-type: application/json' \
+        --data '{
+          "context": "Run unit tests",
+          "state": "success",
+          "description": "Run unit tests passed",
+          "target_url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        }'
+    - name: test-workflow-black check 🚨
+      if: ${{ failure() }}
+      run: |
+        curl --request POST \
+        --url https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.sha }} \
+        --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+        --header 'content-type: application/json' \
+        --data '{
+          "context": "Run unit tests",
+          "state": "failure",
+          "description": "Run unit tests failed",
+          "target_url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        }'

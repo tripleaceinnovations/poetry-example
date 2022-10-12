@@ -27,7 +27,7 @@ jobs:
         app_src_dir: app
 
   # coverage:
-  #   # name: coverage
+  #   # name: coverage-run
   #   uses: ./.github/workflows/coverage.yml
   #   with:
   #       app_src_dir: app

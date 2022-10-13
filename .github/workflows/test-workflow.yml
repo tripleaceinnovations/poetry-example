@@ -14,7 +14,7 @@ on:
 #     with:
 #         app_src_dir: app
 jobs:
-  test-workflow-black:
+  twb:
     runs-on: ubuntu-latest
 
     steps:
@@ -40,7 +40,7 @@ jobs:
     - name: Run black
       run: black --check app
 
-    # xxxxyyyy if you are NOT using Cypress GitHub Integration App, then set commit status manually
+    #cccc if you are NOT using Cypress GitHub Integration App, then set commit status manually
     # https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#job-status-check-functions
     - name: test-workflow-black check ✅
       if: ${{ success() }}
@@ -53,11 +53,19 @@ jobs:
         --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
         --header 'content-type: application/json' \
         --data '{
-          "context": "test-workflow-black",
+          "context": "twb",
           "state": "success",
           "description": "Run unit tests passed",
           "target_url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
         }'
+
+        # curl \
+        #   -X POST \
+        #   -H "Accept: application/vnd.github+json" \
+        #   -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+        #   https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.sha }} \
+        #   -d '{"state":"success","target_url":"https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}","description":"The build succeeded!","context":"test-workflow-black"}'
+
     - name: test-workflow-black check 🚨
       if: ${{ failure() }}
       run: |
@@ -66,7 +74,7 @@ jobs:
         --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
         --header 'content-type: application/json' \
         --data '{
-          "context": "test-workflow-black",
+          "context": "twb",
           "state": "failure",
           "description": "Run unit tests failed",
           "target_url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"

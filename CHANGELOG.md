@@ -11,9 +11,9 @@ Here we write upgrading notes for brands. It's a team effort to make them as
 straightforward as possible.
  
 ### Added
-- [PROJECTNAME-XXXX](http://tickets.projectname.com/browse/PROJECTNAME-XXXX)
+- [PROJECTNAME-XXXX](http://jira.projectname.com/browse/PROJECTNAME-XXXX)
   MINOR Ticket title goes here.
-- [PROJECTNAME-YYYY](http://tickets.projectname.com/browse/PROJECTNAME-YYYY)
+- [PROJECTNAME-YYYY](http://jira.projectname.com/browse/PROJECTNAME-YYYY)
   PATCH Ticket title goes here.
  
 ### Changed
@@ -28,12 +28,12 @@ Here we would have the update steps for 1.2.4 for people to follow.
  
 ### Changed
   
-- [PROJECTNAME-ZZZZ](http://tickets.projectname.com/browse/PROJECTNAME-ZZZZ)
+- [PROJECTNAME-ZZZZ](http://jira.projectname.com/browse/PROJECTNAME-ZZZZ)
   PATCH Drupal.org is now used for composer.
  
 ### Fixed
  
-- [PROJECTNAME-TTTT](http://tickets.projectname.com/browse/PROJECTNAME-TTTT)
+- [PROJECTNAME-TTTT](http://jira.projectname.com/browse/PROJECTNAME-TTTT)
   PATCH Add logic to runsheet teaser delete to delete corresponding
   schedule cards.
  
@@ -45,7 +45,7 @@ Here we would have the update steps for 1.2.4 for people to follow.
  
 ### Fixed
  
-- [PROJECTNAME-UUUU](http://tickets.projectname.com/browse/PROJECTNAME-UUUU)
+- [PROJECTNAME-UUUU](http://jira.projectname.com/browse/PROJECTNAME-UUUU)
   MINOR Fix module foo tests
-- [PROJECTNAME-RRRR](http://tickets.projectname.com/browse/PROJECTNAME-RRRR)
+- [PROJECTNAME-RRRR](http://jira.projectname.com/browse/PROJECTNAME-RRRR)
   MAJOR Module foo's timeline uses the browser timezone for date resolution 

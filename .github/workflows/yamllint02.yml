@@ -1,0 +1,31 @@
+name: YamlLint Run
+
+on:
+  workflow_call:
+
+jobs:
+  yamllint:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    
+    # - name: Setup Python 3.9
+      # uses: actions/setup-python@v2
+      # with:
+        # python-version: 3.9
+
+    # - name: Install Yamllint
+      # run: pip install yamllint
+    
+    # - name: list files
+      # run: |
+        # pwd
+        # ls -latr
+      # shell: bash
+
+    # - name: Run YamlLint
+      # run: yamllint -d relaxed .

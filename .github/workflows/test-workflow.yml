@@ -1,14 +1,22 @@
 name: Test Workflow
 
 on:
-  workflow_run:
-    workflows:
-      - Linting
-    types:
-      -  completed
-  # pull_request:
-  #   branches:
-  #     - "**"
+  push:
+    branches:
+      - aa_notify
+  # workflow_run:
+  #   workflows:
+  #     - Linting
+  #   types:
+  #     -  completed
+  # # pull_request:
+  # #   branches:
+  # #     - "**"
+
+jobs:
+  test-stale:
+    name: workflow-stale
+    uses: ./.github/workflows/test.yml
 
 # jobs:
 #   test-workflow-black:
@@ -16,105 +24,105 @@ on:
 #     uses: ./.github/workflows/black.yml
 #     with:
 #         app_src_dir: app
-jobs:
-  twb:
-    name: Staging Tests
-    runs-on: ubuntu-latest
+# jobs:
+#   twb:
+#     name: Staging Tests
+#     runs-on: ubuntu-latest
 
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
+#     steps:
+#     - name: Checkout
+#       uses: actions/checkout@v2
+#       with:
+#         fetch-depth: 0
 
-    - name: Setup Python 3.9
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.9
+#     - name: Setup Python 3.9
+#       uses: actions/setup-python@v2
+#       with:
+#         python-version: 3.9
 
-    - name: Install Black
-      run: pip install black
+#     - name: Install Black
+#       run: pip install black
 
-    - name: list files
-      run: |
-        pwd
-        ls -latr
-      shell: bash
+#     - name: list files
+#       run: |
+#         pwd
+#         ls -latr
+#       shell: bash
 
-    - name: Run black
-      run: black --check app
+#     - name: Run black
+#       run: black --check app
 
-    # We must set the commit status manually
-    # Reference: https://github.com/bahmutov/eleventy-example/blob/main/.github/workflows/ci.yml#L27
-    - name: Staging Tests ✅
-      if: ${{ success() }}
-        # set the merge commit status check
-        # using GitHub REST API
-        # see https://docs.github.com/en/rest/reference/repos#create-a-commit-status
-      run: |
-        curl --request POST \
-        --url https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.sha }} \
-        --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
-        --header 'content-type: application/json' \
-        --data '{
-          "context": "Staging Tests",
-          "state": "success",
-          "description": "Staging tests passed",
-          "target_url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-        }'
-    - name: Staging Tests 🚨
-      if: ${{ failure() }}
-      # set the merge commit status check
-      # using GitHub REST API
-      # see https://docs.github.com/en/rest/reference/repos#create-a-commit-status
-      run: |
-        curl --request POST \
-        --url https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.sha }} \
-        --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
-        --header 'content-type: application/json' \
-        --data '{
-          "context": "Staging Tests",
-          "state": "failure",
-          "description": "Staging tests failed",
-          "target_url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-        }'
+#     # We must set the commit status manually
+#     # Reference: https://github.com/bahmutov/eleventy-example/blob/main/.github/workflows/ci.yml#L27
+#     - name: Staging Tests ✅
+#       if: ${{ success() }}
+#         # set the merge commit status check
+#         # using GitHub REST API
+#         # see https://docs.github.com/en/rest/reference/repos#create-a-commit-status
+#       run: |
+#         curl --request POST \
+#         --url https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.sha }} \
+#         --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+#         --header 'content-type: application/json' \
+#         --data '{
+#           "context": "Staging Tests",
+#           "state": "success",
+#           "description": "Staging tests passed",
+#           "target_url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+#         }'
+#     - name: Staging Tests 🚨
+#       if: ${{ failure() }}
+#       # set the merge commit status check
+#       # using GitHub REST API
+#       # see https://docs.github.com/en/rest/reference/repos#create-a-commit-status
+#       run: |
+#         curl --request POST \
+#         --url https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.sha }} \
+#         --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+#         --header 'content-type: application/json' \
+#         --data '{
+#           "context": "Staging Tests",
+#           "state": "failure",
+#           "description": "Staging tests failed",
+#           "target_url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+#         }'
 
-    # if you are NOT using Cypress GitHub Integration App, then set commit status manually
-    # https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#job-status-check-functions
-    # - name: test-workflow-black check ✅
-    #   if: ${{ success() }}
-    #     # set the merge commit status check
-    #     # using GitHub REST API
-    #     # see https://docs.github.com/en/rest/reference/repos#create-a-commit-status
-    #   run: |
-    #     curl --request POST \
-    #     --url https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.sha }} \
-    #     --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
-    #     --header 'content-type: application/json' \
-    #     --data '{
-    #       "context": "twb",
-    #       "state": "success",
-    #       "description": "Run unit tests passed",
-    #       "target_url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-    #     }'
+#     # if you are NOT using Cypress GitHub Integration App, then set commit status manually
+#     # https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#job-status-check-functions
+#     # - name: test-workflow-black check ✅
+#     #   if: ${{ success() }}
+#     #     # set the merge commit status check
+#     #     # using GitHub REST API
+#     #     # see https://docs.github.com/en/rest/reference/repos#create-a-commit-status
+#     #   run: |
+#     #     curl --request POST \
+#     #     --url https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.sha }} \
+#     #     --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+#     #     --header 'content-type: application/json' \
+#     #     --data '{
+#     #       "context": "twb",
+#     #       "state": "success",
+#     #       "description": "Run unit tests passed",
+#     #       "target_url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+#     #     }'
 
-    #     # curl \
-    #     #   -X POST \
-    #     #   -H "Accept: application/vnd.github+json" \
-    #     #   -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-    #     #   https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.sha }} \
-    #     #   -d '{"state":"success","target_url":"https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}","description":"The build succeeded!","context":"test-workflow-black"}'
+#     #     # curl \
+#     #     #   -X POST \
+#     #     #   -H "Accept: application/vnd.github+json" \
+#     #     #   -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+#     #     #   https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.sha }} \
+#     #     #   -d '{"state":"success","target_url":"https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}","description":"The build succeeded!","context":"test-workflow-black"}'
 
-    # - name: test-workflow-black check 🚨
-    #   if: ${{ failure() }}
-    #   run: |
-    #     curl --request POST \
-    #     --url https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.sha }} \
-    #     --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
-    #     --header 'content-type: application/json' \
-    #     --data '{
-    #       "context": "twb",
-    #       "state": "failure",
-    #       "description": "Run unit tests failed",
-    #       "target_url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-    #     }'
+#     # - name: test-workflow-black check 🚨
+#     #   if: ${{ failure() }}
+#     #   run: |
+#     #     curl --request POST \
+#     #     --url https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.sha }} \
+#     #     --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+#     #     --header 'content-type: application/json' \
+#     #     --data '{
+#     #       "context": "twb",
+#     #       "state": "failure",
+#     #       "description": "Run unit tests failed",
+#     #       "target_url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+#     #     }'

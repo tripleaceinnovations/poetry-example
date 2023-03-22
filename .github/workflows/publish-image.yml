@@ -1,0 +1,90 @@
+name: Publish Docker Image
+
+on:
+  workflow_call:
+    inputs:
+      package_dir:
+        description: >
+          some package type
+        required: false
+        type: string
+        default: somedir
+
+      my_artifact_name:
+        description: >
+          Docker atifact name
+        required: false
+        type: string
+        default: some-docker-image
+
+      registry:
+        description: >
+          Docker registry
+        required: false
+        type: string
+        default: dexydevdoc
+
+      arch:
+        description: >
+          Arch
+        required: false
+        type: string
+        default: amd64
+  
+    secrets:
+      docker_username:
+        description: username for docker registry
+        required: false
+
+      docker_password:
+        description: password or token for docker registry
+        required: false
+
+      webhook_url_slack:
+        description: Webhook URL for Slack
+        required: false
+
+jobs:
+  publish-image:
+    name: Publish Image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: ${{ inputs.my_artifact_name }}-${{ inputs.arch }}
+          path: ${{ inputs.package_dir }}
+
+      - name: Set registry
+        id: set-registry
+        run: echo "registry=${{ inputs.registry }}" >> $GITHUB_OUTPUT
+        shell: bash
+
+      # - name: Publish image
+      #   run: |
+      #     set -xe -o pipeline
+      #     export DOCKER_TAG=$(cat ${{ inputs.packages_dir }}/docker-tag)
+          
+      #     docker load -i "${{ inputs.package_dir }}/${{ inputs.my_artifact_name }}-${{ inputs.arch }}.tar"
+      #     docker images
+
+      - name: Get built image
+        id: image-built
+        run: |
+          export DOCKER_TAG=$(cat ${{ inputs.package_dir }}/docker-tag)
+          echo "image=${{ steps.set-registry.outputs.registry }}/${DOCKER_TAG}" >> $GITHUB_OUTPUT
+
+      - name: Notify published image to Slack
+        if: ${{ env.SLACK_WEBHOOK_URL != '' }}
+        uses: slackapi/slack-github-action@v1.23.0
+        with:
+          payload: |
+            {
+                "message":
+                "PUBLISHED IMAGE: ${{ steps.image-built.outputs.image }} published from workflow run at https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}."
+            }
+        env:
+            SLACK_WEBHOOK_URL: ${{ secrets.webhook_url_slack }}
